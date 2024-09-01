@@ -1,0 +1,51 @@
+# Archivo docker-compose.yml
+version: '3.8'
+
+services:
+  mssql_primary:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MSSQL_VERSION: ${MSSQL_VERSION}
+        MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+        MSSQL_PID: ${MSSQL_PID}
+    container_name: mssql_primary
+    environment:
+      SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: ${MSSQL_PID}
+    ports:
+      - "1433:1433"
+    networks:
+      - mssql-network
+    volumes:
+      - mssql_primary_data:/var/opt/mssql
+
+  mssql_replica:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MSSQL_VERSION: ${MSSQL_VERSION}
+        MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+        MSSQL_PID: ${MSSQL_PID}
+    container_name: mssql_replica
+    environment:
+      SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: ${MSSQL_PID}
+    ports:
+      - "1434:1433"
+    networks:
+      - mssql-network
+    volumes:
+      - mssql_replica_data:/var/opt/mssql
+
+networks:
+  mssql-network:
+    driver: bridge
+
+volumes:
+  mssql_primary_data:
+  mssql_replica_data:
