@@ -12,5 +12,16 @@ ENV ACCEPT_EULA=Y
 ENV SA_PASSWORD=${MSSQL_SA_PASSWORD}
 ENV MSSQL_PID=${MSSQL_PID}
 
-# Comando para iniciar SQL Server
-CMD /opt/mssql/bin/sqlservr
+# Copia el script de configuración y el script de inicio
+COPY ./setup.sql /usr/config/setup.sql
+COPY ./entrypoint.sh /usr/config/entrypoint.sh
+
+# Cambiar a usuario root para dar permisos de ejecución
+USER root
+RUN chmod +x /usr/config/entrypoint.sh
+
+# Volver al usuario mssql
+USER mssql
+
+# Usar el script de inicio como punto de entrada
+ENTRYPOINT ["/usr/config/entrypoint.sh"]
