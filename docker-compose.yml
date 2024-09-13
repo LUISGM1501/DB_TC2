@@ -4,47 +4,38 @@ services:
   mssql_primary:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.primary
       args:
         MSSQL_VERSION: ${MSSQL_VERSION}
-        MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
-        MSSQL_PID: ${MSSQL_PID}
-    container_name: mssql_primary
     environment:
-      SA_PASSWORD: ${MSSQL_SA_PASSWORD}
-      ACCEPT_EULA: "Y"
-      MSSQL_PID: ${MSSQL_PID}
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_PID=${MSSQL_PID}
     ports:
-      - "1435:1433"  
+      - "1435:1433"
+    volumes:
+      - mssql_data_primary:/var/opt/mssql
     networks:
       - mssql-network
-    volumes:
-      - mssql_primary_data:/var/opt/mssql
 
   mssql_replica:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.replica
       args:
         MSSQL_VERSION: ${MSSQL_VERSION}
-        MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
-        MSSQL_PID: ${MSSQL_PID}
-    container_name: mssql_replica
     environment:
-      SA_PASSWORD: ${MSSQL_SA_PASSWORD}
-      ACCEPT_EULA: "Y"
-      MSSQL_PID: ${MSSQL_PID}
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_PID=${MSSQL_PID}
     ports:
-      - "1436:1433"  
+      - "1436:1433"
+    volumes:
+      - mssql_data_replica:/var/opt/mssql
     networks:
       - mssql-network
-    volumes:
-      - mssql_replica_data:/var/opt/mssql
+
+volumes:
+  mssql_data_primary:
+  mssql_data_replica:
 
 networks:
   mssql-network:
-    driver: bridge
-
-volumes:
-  mssql_primary_data:
-  mssql_replica_data:
