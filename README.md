@@ -183,6 +183,47 @@ USE DB_TC2_PrimaryDB;
 SELECT * FROM TestTable;
 ```
 
+## Paso 6: Simulación de Failover y Validación
+
+### 6.1 Detener el Contenedor Primario
+
+Simula un fallo deteniendo el contenedor de la instancia primaria:
+
+```bash
+docker stop mssql_primary
+```
+
+### 6.2 Insertar Datos en la Réplica y Verificar
+
+Con la primaria detenida, conecta a la réplica e inserta nuevos datos para validar que puede actuar como primaria:
+
+```sql
+USE DB_TC2_PrimaryDB;
+
+-- Insertar datos adicionales de prueba en la réplica
+INSERT INTO TestTable (ID, Name) VALUES (2, 'Prueba en Réplica');
+
+-- Verificar los datos insertados
+SELECT * FROM TestTable;
+```
+
+### 6.3 Reiniciar el Contenedor Primario y Verificar Sincronización
+
+Reinicia la instancia primaria y verifica que los datos se han sincronizado correctamente:
+
+```bash
+docker start mssql_primary
+```
+
+Luego, conecta a la primaria y verifica los datos:
+
+```sql
+USE DB_TC2_PrimaryDB;
+
+-- Verificar que los datos insertados en la réplica estén presentes en la primaria
+SELECT * FROM TestTable;
+```
+
 ## Conclusión
 
 Este archivo README proporciona una guía paso a paso para configurar y probar Log Shipping en SQL Server utilizando Docker. Asegúrate de ajustar las rutas de backup y otros parámetros según tu entorno específico.
