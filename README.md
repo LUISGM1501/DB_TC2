@@ -24,7 +24,7 @@ services:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=YourStrong!Password
     ports:
-      - "1433:1433"
+      - "1435:1433"
     volumes:
       - mssql_primary_data:/var/opt/mssql
 
@@ -35,7 +35,7 @@ services:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=YourStrong!Password
     ports:
-      - "1434:1433"
+      - "1436:1433"
     volumes:
       - mssql_replica_data:/var/opt/mssql
 
