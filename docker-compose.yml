@@ -2,40 +2,27 @@ version: '3.8'
 
 services:
   mssql_primary:
-    build:
-      context: .
-      dockerfile: Dockerfile.primary
-      args:
-        MSSQL_VERSION: ${MSSQL_VERSION}
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: mssql_primary
     environment:
-      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
-      - MSSQL_PID=${MSSQL_PID}
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourPassword123
     ports:
       - "1435:1433"
     volumes:
-      - mssql_data_primary:/var/opt/mssql
-    networks:
-      - mssql-network
+      - mssql_primary_data:/var/opt/mssql
 
   mssql_replica:
-    build:
-      context: .
-      dockerfile: Dockerfile.replica
-      args:
-        MSSQL_VERSION: ${MSSQL_VERSION}
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: mssql_replica
     environment:
-      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
-      - MSSQL_PID=${MSSQL_PID}
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourPassword123
     ports:
       - "1436:1433"
     volumes:
-      - mssql_data_replica:/var/opt/mssql
-    networks:
-      - mssql-network
+      - mssql_replica_data:/var/opt/mssql
 
 volumes:
-  mssql_data_primary:
-  mssql_data_replica:
-
-networks:
-  mssql-network:
+  mssql_primary_data:
+  mssql_replica_data:
