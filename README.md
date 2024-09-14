@@ -83,9 +83,25 @@ EXEC sp_add_log_shipping_primary_database
     @monitor_server = N'mssql_primary';
 ```
 
-## Paso 3: Configuración de la Base de Datos Réplica
+## Paso 3: Copiar el Archivo de Backup a la Réplica
 
-### 3.1 Conectar a la Base de Datos Réplica (`mssql_replica`)
+Después de realizar el backup en la instancia primaria, copia el archivo de backup al contenedor de la réplica.
+
+### 3.1 Copiar el Backup desde la Primaria al Host y luego a la Réplica
+
+Ejecuta los siguientes comandos desde tu terminal de host:
+
+```bash
+# Copiar el backup desde el contenedor primaria al host
+docker cp mssql_primary:/var/opt/mssql/data/DB_TC2_PrimaryDB.bak .
+
+# Copiar el backup desde el host al contenedor réplica
+docker cp DB_TC2_PrimaryDB.bak mssql_replica:/var/opt/mssql/data/
+```
+
+## Paso 4: Configuración de la Base de Datos Réplica
+
+### 4.1 Conectar a la Base de Datos Réplica (`mssql_replica`)
 
 Ejecuta los siguientes comandos en la consola de SQL Server de la instancia réplica:
 
@@ -114,9 +130,9 @@ EXEC sp_add_log_shipping_secondary_database
     @restore_mode = 1;  -- 1 para STANDBY o NORECOVERY
 ```
 
-## Paso 4: Verificación y Pruebas
+## Paso 5: Verificación y Pruebas
 
-### 4.1 Insertar y Verificar Datos
+### 5.1 Insertar y Verificar Datos
 
 Inserta datos de prueba en la primaria y verifica que se replican correctamente:
 
@@ -137,7 +153,7 @@ TO DISK = '/var/opt/mssql/data/DB_TC2_PrimaryDB_Manual.trn'
 WITH INIT;
 ```
 
-### 4.2 Restaurar el Log en la Réplica
+### 5.2 Restaurar el Log en la Réplica
 
 Ejecuta estos pasos en la réplica para restaurar los datos:
 
