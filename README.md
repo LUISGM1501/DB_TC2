@@ -153,7 +153,17 @@ TO DISK = '/var/opt/mssql/data/DB_TC2_PrimaryDB_Manual.trn'
 WITH INIT;
 ```
 
-### 5.2 Restaurar el Log en la Réplica
+### 5.2 Copiar y Restaurar el Log en la Réplica
+
+Copia el archivo de log desde la primaria a la réplica:
+
+```bash
+# Copiar el log backup desde el contenedor primaria al host
+docker cp mssql_primary:/var/opt/mssql/data/DB_TC2_PrimaryDB_Manual.trn .
+
+# Copiar el log backup desde el host al contenedor réplica
+docker cp DB_TC2_PrimaryDB_Manual.trn mssql_replica:/var/opt/mssql/data/
+```
 
 Ejecuta estos pasos en la réplica para restaurar los datos:
 
