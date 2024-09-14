@@ -6,7 +6,7 @@ services:
     container_name: mssql_primary
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=YourPassword123
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
     ports:
       - "1435:1433"
     volumes:
@@ -17,7 +17,7 @@ services:
     container_name: mssql_replica
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=YourPassword123
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
     ports:
       - "1436:1433"
     volumes:
